@@ -45,7 +45,7 @@ class Transaction {
     this.ins = [];
     this.outs = [];
   }
-  static fromBuffer(buffer, _NO_STRICT, isCoinbasePayload) {
+  static fromBuffer(buffer, _NO_STRICT, _IS_COINBASE_PAYLOAD) {
     const bufferReader = new bufferutils_1.BufferReader(buffer);
     const tx = new Transaction();
     tx.version = bufferReader.readInt32();
@@ -86,7 +86,7 @@ class Transaction {
         throw new Error('Transaction has superfluous witness data');
     }
     tx.locktime = bufferReader.readUInt32();
-    if (isCoinbasePayload)
+    if (_IS_COINBASE_PAYLOAD)
       tx.coinbasePayload = bufferReader.readVarSlice();
     if (_NO_STRICT) return tx;
     if (bufferReader.offset !== buffer.length)
@@ -159,6 +159,7 @@ class Transaction {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
     return (
       (hasWitnesses ? 10 : 8) +
+      (this.coinbasePayload ? varSliceSize(input.script) : 0) +
       bufferutils_1.varuint.encodingLength(this.ins.length) +
       bufferutils_1.varuint.encodingLength(this.outs.length) +
       this.ins.reduce((sum, input) => {
