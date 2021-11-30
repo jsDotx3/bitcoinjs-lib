@@ -45,7 +45,7 @@ class Transaction {
     this.ins = [];
     this.outs = [];
   }
-  static fromBuffer(buffer, _NO_STRICT) {
+  static fromBuffer(buffer, NO_STRICT, isCoinbasePayload) {
     const bufferReader = new bufferutils_1.BufferReader(buffer);
     const tx = new Transaction();
     tx.version = bufferReader.readInt32();
@@ -86,6 +86,8 @@ class Transaction {
         throw new Error('Transaction has superfluous witness data');
     }
     tx.locktime = bufferReader.readUInt32();
+    if (isCoinbasePayload)
+      tx.coinbasePayload = bufferReader.readVarSlice();
     if (_NO_STRICT) return tx;
     if (bufferReader.offset !== buffer.length)
       throw new Error('Transaction has unexpected data');
@@ -523,6 +525,8 @@ class Transaction {
       });
     }
     bufferWriter.writeUInt32(this.locktime);
+    if (this.coinbasePayload)
+      bufferWriter.writeSlice(this.coinbasePayload);
     // avoid slicing unless necessary
     if (initialOffset !== undefined)
       return buffer.slice(initialOffset, bufferWriter.offset);
