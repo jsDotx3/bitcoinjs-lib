@@ -159,7 +159,7 @@ class Transaction {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
     return (
       (hasWitnesses ? 10 : 8) +
-      (this.coinbasePayload ? varSliceSize(input.script) : 0) +
+      (this.coinbasePayload ? varSliceSize(this.coinbasePayload) : 0) +
       bufferutils_1.varuint.encodingLength(this.ins.length) +
       bufferutils_1.varuint.encodingLength(this.outs.length) +
       this.ins.reduce((sum, input) => {
