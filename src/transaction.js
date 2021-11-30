@@ -179,6 +179,7 @@ class Transaction {
     const newTx = new Transaction();
     newTx.version = this.version;
     newTx.locktime = this.locktime;
+    newTx.coinbasePayload = this.coinbasePayload;
     newTx.ins = this.ins.map(txIn => {
       return {
         hash: txIn.hash,
