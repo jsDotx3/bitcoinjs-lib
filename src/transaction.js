@@ -45,7 +45,7 @@ class Transaction {
     this.ins = [];
     this.outs = [];
   }
-  static fromBuffer(buffer, NO_STRICT, isCoinbasePayload) {
+  static fromBuffer(buffer, _NO_STRICT, isCoinbasePayload) {
     const bufferReader = new bufferutils_1.BufferReader(buffer);
     const tx = new Transaction();
     tx.version = bufferReader.readInt32();
