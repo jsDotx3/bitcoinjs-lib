@@ -87,7 +87,9 @@ class Transaction {
     }
     tx.locktime = bufferReader.readUInt32();
     if (_IS_COINBASE_PAYLOAD)
-      tx.coinbasePayload = bufferReader.readVarSlice();
+      tx.payload = bufferReader.readVarSlice();
+    else if (tx.version == 0x00060003)
+      tx.payload = bufferReader.readVarSlice();
     if (_NO_STRICT) return tx;
     if (bufferReader.offset !== buffer.length)
       throw new Error('Transaction has unexpected data');
@@ -159,7 +161,7 @@ class Transaction {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
     return (
       (hasWitnesses ? 10 : 8) +
-      (this.coinbasePayload ? varSliceSize(this.coinbasePayload) : 0) +
+      (this.payload ? varSliceSize(this.payload) : 0) +
       bufferutils_1.varuint.encodingLength(this.ins.length) +
       bufferutils_1.varuint.encodingLength(this.outs.length) +
       this.ins.reduce((sum, input) => {
@@ -179,7 +181,7 @@ class Transaction {
     const newTx = new Transaction();
     newTx.version = this.version;
     newTx.locktime = this.locktime;
-    newTx.coinbasePayload = this.coinbasePayload;
+    newTx.payload = this.payload;
     newTx.ins = this.ins.map(txIn => {
       return {
         hash: txIn.hash,
@@ -527,8 +529,8 @@ class Transaction {
       });
     }
     bufferWriter.writeUInt32(this.locktime);
-    if (this.coinbasePayload)
-      bufferWriter.writeVarSlice(this.coinbasePayload);
+    if (this.payload)
+      bufferWriter.writeVarSlice(this.payload);
     // avoid slicing unless necessary
     if (initialOffset !== undefined)
       return buffer.slice(initialOffset, bufferWriter.offset);
