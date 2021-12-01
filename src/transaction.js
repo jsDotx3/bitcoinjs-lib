@@ -528,7 +528,7 @@ class Transaction {
     }
     bufferWriter.writeUInt32(this.locktime);
     if (this.coinbasePayload)
-      bufferWriter.writeSlice(this.coinbasePayload);
+      bufferWriter.writeVarSlice(this.coinbasePayload);
     // avoid slicing unless necessary
     if (initialOffset !== undefined)
       return buffer.slice(initialOffset, bufferWriter.offset);
