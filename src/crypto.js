@@ -2,6 +2,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.taggedHash = exports.hash256 = exports.hash160 = exports.sha256 = exports.sha1 = exports.ripemd160 = void 0;
 const createHash = require('create-hash');
+const fromEntries = require('fromentries');
 function ripemd160(buffer) {
   try {
     return createHash('rmd160')
@@ -46,7 +47,7 @@ const TAGS = [
   'KeyAgg coefficient',
 ];
 /** An object mapping tags to their tagged hash prefix of [SHA256(tag) | SHA256(tag)] */
-const TAGGED_HASH_PREFIXES = Object.fromEntries(
+const TAGGED_HASH_PREFIXES = fromEntries(
   TAGS.map(tag => {
     const tagHash = sha256(Buffer.from(tag));
     return [tag, Buffer.concat([tagHash, tagHash])];

@@ -5,7 +5,7 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "engines": {
-    "node": ">=8.0.0"
+    "node": "<=12"
   },
   "keywords": [
     "bitcoinjs",
@@ -53,6 +53,7 @@
     "bip174": "^2.0.1",
     "bs58check": "^2.1.2",
     "create-hash": "^1.1.0",
+    "fromentries": "^1.3.2",
     "typeforce": "^1.11.3",
     "varuint-bitcoin": "^1.1.2",
     "wif": "^2.0.1"
